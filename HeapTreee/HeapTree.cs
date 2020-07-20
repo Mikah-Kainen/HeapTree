@@ -2,31 +2,41 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HeapTreee
+namespace HeapTree
 {
-    public class HeapTree<T> where T : IComparable<T>
+    public class HeapTree<T>
     {
         public List<T> HeapList;
-        int TailIndex;
+        int TailIndex => HeapList.Count - 1;
 
-        public HeapTree()
+        public bool IsEmpty => HeapList.Count == 0;
+
+        IComparer<T> comparer;
+
+        public HeapTree(IComparer<T> comparer)
         {
+            this.comparer = comparer;
+
+
             HeapList = new List<T>();
-            TailIndex = 0;
         }
 
         private void HeapifyUp(int targetIndex)
         {
+            if (targetIndex <= 0)
+            {
+                return;
+            }
+
             int parentIndex = (targetIndex - 1) / 2;
 
             T targetValue = HeapList[targetIndex];
             T parentValue = HeapList[parentIndex];
 
-            T tempHolder;
 
-            if(targetValue.CompareTo(parentValue) < 0)
+            if (comparer.Compare(targetValue, parentValue) < 0)
             {
-                tempHolder = parentValue;
+                T tempHolder = parentValue;
                 HeapList[parentIndex] = targetValue;
                 HeapList[targetIndex] = tempHolder;
                 HeapifyUp(parentIndex);
@@ -37,13 +47,18 @@ namespace HeapTreee
         private void HeapifyDown(int targetIndex)
         {
             int leftIndex = targetIndex * 2 + 1;
+            if (leftIndex >= HeapList.Count)
+            {
+                return;
+            }
+
             int rightIndex = targetIndex * 2 + 2;
 
             T tempHolder;
 
-            if(HeapList[leftIndex].CompareTo(HeapList[rightIndex]) < 0)
+            if(rightIndex >= HeapList.Count || comparer.Compare(HeapList[leftIndex], HeapList[rightIndex]) < 0)
             {
-                if(HeapList[leftIndex].CompareTo(HeapList[targetIndex]) < 0)
+                if(comparer.Compare(HeapList[leftIndex], HeapList[targetIndex]) < 0)
                 {
                     tempHolder = HeapList[targetIndex];
                     HeapList[targetIndex] = HeapList[leftIndex];
@@ -53,7 +68,7 @@ namespace HeapTreee
             }
             else
             {
-                if(HeapList[rightIndex].CompareTo(HeapList[targetIndex]) < 0)
+                if(comparer.Compare(HeapList[rightIndex], HeapList[targetIndex]) < 0)
                 {
                     tempHolder = HeapList[targetIndex];
                     HeapList[targetIndex] = HeapList[rightIndex];
@@ -65,17 +80,41 @@ namespace HeapTreee
 
         public void Add(T targetValue)
         {
-            HeapList[TailIndex] = targetValue;
+            HeapList.Add(targetValue);
 
             HeapifyUp(TailIndex);
+        }
 
-            TailIndex++;
+        public List<T> HeapSort()
+        {
+            List<T> returnList = new List<T>();
+
+            var heap = new HeapTree<T>(comparer);
+
+            
+
+            while (HeapList.Count > 0)
+            {
+                returnList.Add(Pop());
+            }
+            return returnList;
         }
 
         public T Pop()
         {
-            tempHolder
-            return 
+            if(HeapList.Count == 0)
+            {
+                throw new HeapEmptyException("Heap is empty");
+            }
+
+            T tempHolder = HeapList[0];
+
+            HeapList[0] = HeapList[TailIndex];
+            HeapList.RemoveAt(TailIndex);
+
+            HeapifyDown(0);
+
+            return tempHolder;
         }
     }
 }
