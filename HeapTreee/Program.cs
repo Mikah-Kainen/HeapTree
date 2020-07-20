@@ -7,6 +7,6 @@ namespace HeapTreee
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World! I Am A Tree");
-        });
+        }
     }
 }
