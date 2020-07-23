@@ -60,9 +60,9 @@ namespace HeapTree
             //    heap.Add(10 - i);
             //}
 
-            while (!heap.IsEmpty)
+            foreach(Person person in heap.HeapSort())
             {
-                Console.WriteLine($"{heap.Pop()}");
+                Console.WriteLine($"{person.Name}, {person.Age}");
             }
             //heap.Pop();
             //heap.Add(heap.Pop());

@@ -89,14 +89,17 @@ namespace HeapTree
         {
             List<T> returnList = new List<T>();
 
-            var heap = new HeapTree<T>(comparer);
-
+            var heap = new List<T>();
             
 
+            T tempHolder;
             while (HeapList.Count > 0)
             {
-                returnList.Add(Pop());
+                tempHolder = Pop();
+                returnList.Add(tempHolder);
+                heap.Add(tempHolder);
             }
+            HeapList = heap;
             return returnList;
         }
 
